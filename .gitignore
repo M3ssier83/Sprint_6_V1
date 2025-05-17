@@ -1,0 +1,14 @@
+.idea/
+*.iml
+__pycache__/
+*.pyc
+.vscode/
+chromedriver.log
+.venv/
+venv/
+.env
+.DS_Store
+*.bak
+*.tmp
+.pytest_cache/
+*.log
