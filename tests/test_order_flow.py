@@ -5,25 +5,19 @@ import allure
 from pages.order_page import OrderPage
 from pages.main_page import MainPage
 from data import TestData
-from locators.order_page_locators import OrderPageLocators
-from selenium.webdriver.support import expected_conditions as EC
-
 
 @allure.title("Проверки оформления заказа с валидными данными через обе кнопки заказа и всплывающего окна с сообщением об успешном создании заказа")
-# Параметризируем тест: top и bottom кнопки + данные заказа
-@pytest.mark.parametrize('order_data', TestData.get_order_data())
-def test_order_form_submission(driver, order_data):
+# Параметризируем тест: передаём пары (данные заказа, позиция кнопки "Заказать")
+@pytest.mark.parametrize("order_data, button_position", TestData.get_order_button_data())
+def test_order_form_submission(driver, order_data, button_position):
     main_page = MainPage(driver) # Создаём экземпляр главной страницы
     order_page = OrderPage(driver) # Создаём экземпляр страницы оформления заказа
     main_page.open() # Открываем главную страницу
     main_page.close_cookie_popup() # Закрываем попап cookies
 
-    if order_data['location'] == 'top':
-        main_page.click_top_order_button() # Кликаем по верхней кнопке «Заказать»
-    elif order_data['location'] == 'bottom':
-        main_page.click_bottom_order_button() # Кликаем по нижней кнопке «Заказать»
-    else:
-        raise ValueError(f"Неизвестное значение location: {order_data['location']}")
+    click_method = main_page.get_click_method_map().get(button_position)  # Получаем метод клика по кнопке в зависимости от её положения (верхняя или нижняя)
+    assert click_method, f"Нет метода для позиции кнопки: {button_position}" # Проверяем, что метод найден. Если нет — выводим сообщение об ошибке с указанием позиции
+    click_method()  # Кликаем по соответствующей кнопке "Заказать"
 
     order_page.fill_user_info( # Заполняем поля формы: имя, фамилия, адрес, метро, телефон
         order_data['first_name'],

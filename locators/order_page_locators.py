@@ -12,7 +12,9 @@ class OrderPageLocators:
 
     # Локаторы блока "Про аренду"
     INPUT_DATE = (By.XPATH, "//input[@placeholder='* Когда привезти самокат']") # Поле для выбора даты аренды
+    NEXT_MONTH_BUTTON = (By.CLASS_NAME, "react-datepicker__navigation--next")
     DATE_OPTION_TEMPLATE = "//div[contains(@class,'react-datepicker__day--') and text()='{}']" # Шаблон локатора дня в календаре (тут очень сильно помог ChatGPT)
+    DATE_PICKER_DAY_XPATH = "//div[contains(@class, 'react-datepicker__day') and not(contains(@class, 'outside-month')) and text()='{}']"
     RENT_PERIOD = (By.CLASS_NAME, "Dropdown-placeholder") # Выпадающий список срока аренды
     RENT_PERIOD_OPTION_TEMPLATE = "//div[@class='Dropdown-menu']//div[text()='{}']" # Шаблон локатора пункта в выпадающем списке срока аренды
     COLOR_BLACK = (By.ID, "black") # Чекбокс выбора чёрного цвета самоката

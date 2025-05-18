@@ -2,7 +2,6 @@
 
 import allure
 from data import TestData
-from pages.main_page import MainPage
 
 @allure.title('Проверка перехода на главную страницу "Самоката" при клике по логотипу "Самокат"')
 def test_scooter_logo_redirects_to_home_page(open_order_page):

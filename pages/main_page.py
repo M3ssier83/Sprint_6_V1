@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 from data import TestData
 from locators.main_page_locators import MainPageLocators
@@ -21,6 +20,12 @@ class MainPage(BasePage):
         self.scroll_to_element(self.find_element(MainPageLocators.BUTTON_ORDER_BOTTOM))
         self.click_element(MainPageLocators.BUTTON_ORDER_BOTTOM)
 
+    def get_click_method_map(self): #Словарь, отображающий позицию кнопки на соответствующий метод клика.
+        return {
+            'top': self.click_top_order_button,
+            'bottom': self.click_bottom_order_button,
+        }
+
     @allure.step("Открываем вопрос FAQ и получаем ответ: {question_key}")
     def open_question_and_get_answer(self, question_key): # Открываем вопрос FAQ и получаем ответ
         locators = MainPageLocators.QUESTIONS.get(question_key)  # Получаем локаторы вопроса и ответа из словаря
@@ -30,8 +35,7 @@ class MainPage(BasePage):
         answer_locator = locators["answer"]
         question_element = self.find_element(question_locator) # Находим элемент вопроса и скроллим к нему
         self.scroll_to_element(question_element)
-        self.wait.until(EC.element_to_be_clickable(question_locator)).click() # Кликаем по вопросу, чтобы открыть ответ
-        self.wait.until( # Ждём, пока появится текст ответа
-            EC.visibility_of_element_located(answer_locator),
-            message=f"Ответ для '{question_key}' не появился")
+        self.click_when_clickable(question_locator)
+        self.wait_for_visibility(answer_locator, message=f"Ответ для '{question_key}' не появился")
         return self.find_element(answer_locator).text.strip() # Возвращаем текст ответа, убирая пробелы по краям
+

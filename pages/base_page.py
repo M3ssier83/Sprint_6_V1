@@ -10,6 +10,15 @@ class BasePage:
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
 
+    @allure.step("Клик по элементу с ожиданием кликабельности: {locator}")
+    def click_when_clickable(self, locator):
+        element = self.wait.until(EC.element_to_be_clickable(locator))
+        element.click()
+
+    @allure.step("Ожидание видимости элемента: {locator}")
+    def wait_for_visibility(self, locator, message=None):
+        self.wait.until(EC.visibility_of_element_located(locator), message=message)
+
     @allure.step("Открытие страницы по URL: {url}")
     def open(self, url): # Открываем страницу по переданному URL
         self.driver.get(url)
@@ -64,3 +73,14 @@ class BasePage:
     @allure.step("Ожидание загрузки страницы оформления")
     def wait_for_load_order_page(self): # Ждём загрузки страницы оформления заказа
         self.wait_for_load_url(TestData.SCOOTER_ORDER_PAGE)
+
+    @allure.step("Ожидание появления новой вкладки")
+    def switch_to_new_tab(self):
+        self.wait.until(lambda driver: len(driver.window_handles) > 1)
+        new_window = self.driver.window_handles[-1]  # переключаемся на последнюю открытую вкладку
+        self.driver.switch_to.window(new_window)
+        self.wait.until(lambda driver: driver.execute_script("return document.readyState") == "complete")
+
+    @allure.step("Ожидаем, что URL будет содержать: {partial_url}")
+    def wait_for_url_contains(self, partial_url: str):
+        self.wait.until(EC.url_contains(partial_url))

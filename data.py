@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from urllib.parse import urlparse
 
 # Вспомогательные функции форматирования дат
 def format_date_str(date_obj): # Форматирует дату в строку формата 'дд.мм.гггг', например '10.05.2025'
@@ -21,6 +22,7 @@ class TestData:
     SCOOTER_MAIN_PAGE = 'https://qa-scooter.praktikum-services.ru/'
     YANDEX_MAIN_PAGE = 'https://dzen.ru/?yredirect=true'
     SCOOTER_ORDER_PAGE = 'https://qa-scooter.praktikum-services.ru/order'
+    YANDEX_DOMAIN = urlparse(YANDEX_MAIN_PAGE).netloc
 
     URLS = {
         'SCOOTER_MAIN_PAGE': SCOOTER_MAIN_PAGE,
@@ -42,7 +44,6 @@ class TestData:
             'rental_period': 'двое суток',  # Срок аренды (текстовое значение)
             'scooter_color': 'black',  # Цвет самоката
             'courier_comment': 'Подъезд со стороны двора',  # Комментарий для курьера
-            'location': 'top'
         },
         {
             'first_name': 'Александр',  # Имя пользователя
@@ -56,10 +57,35 @@ class TestData:
             'rental_period': 'трое суток',  # Срок аренды (текстовое значение)
             'scooter_color': 'grey',  # Цвет самоката
             'courier_comment': 'Привезти вкусняшки',  # Комментарий для курьера
-            'location': 'bottom'
         }
     ]
+
+    FAQ_ANSWERS = [
+        ("price_payment", "Сутки — 400 рублей. Оплата курьеру — наличными или картой."),
+        ("multiple_scooters",
+         "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим."),
+        ("rental_duration",
+         "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30."),
+        ("order_today", "Только начиная с завтрашнего дня. Но скоро станем расторопнее."),
+        ("extension",
+         "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010."),
+        ("charger_included",
+         "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится."),
+        ("order_cancellation",
+         "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои."),
+        ("delivery_outside_mkad", "Да, обязательно. Всем самокатов! И Москве, и Московской области."),
+    ]
+
+    ORDER_BUTTON_POSITIONS = ['top', 'bottom']
+
+    @classmethod
+    def get_faq_answers(cls):
+        return cls.FAQ_ANSWERS
 
     @classmethod
     def get_order_data(cls):
         return cls.order_data
+
+    @classmethod
+    def get_order_button_data(cls):
+        return list(zip(cls.order_data, cls.ORDER_BUTTON_POSITIONS))

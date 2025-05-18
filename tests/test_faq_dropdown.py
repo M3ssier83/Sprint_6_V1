@@ -2,20 +2,16 @@
 
 import pytest
 import allure
+from data import TestData
+from pages.main_page import MainPage
 
 @allure.title("Проверка отображения текста ответа на вопрос в блоке FAQ")
-# Параметризуем тест: question_key соответствует ключу из словаря локаторов, expected_answer — ожидаемый текст
-@pytest.mark.parametrize("question_key,expected_answer", [
-    ("price_payment", "Сутки — 400 рублей. Оплата курьеру — наличными или картой."),
-    ("multiple_scooters", "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим."),
-    ("rental_duration",
-     "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30."),
-    ("order_today", "Только начиная с завтрашнего дня. Но скоро станем расторопнее."),
-    ("extension", "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010."),
-    ("charger_included", "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится."),
-    ("order_cancellation", "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои."),
-    ("delivery_outside_mkad", "Да, обязательно. Всем самокатов! И Москве, и Московской области.")
-])
-def test_faq_question_answer_text(open_main_page, question_key, expected_answer): # Открываем нужный вопрос
-    actual_answer = open_main_page.open_question_and_get_answer(question_key) # Получаем текст ответа
-    assert actual_answer == expected_answer, (f"Для вопроса '{question_key}' ожидался ответ:\n'{expected_answer}',\n"f"но получен:\n'{actual_answer}'") # Сравниваем фактический ответ с ожидаемым
+@pytest.mark.parametrize("key, expected_text", TestData.get_faq_answers())
+def test_faq(driver, key, expected_text):
+    page = MainPage(driver)
+    page.open()  # если этот метод есть, иначе просто открой через driver.get()
+    actual_answer = page.open_question_and_get_answer(key)
+    assert actual_answer == expected_text, (
+        f"Для вопроса '{key}' ожидался ответ:\n'{expected_text}',\n"
+        f"но получен:\n'{actual_answer}'"
+    )
